@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:18.3-alpine3.23
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=books
+  redis:
+    image: redis:8.6.2-alpine3.23
+
+  api:
+    build:
+      context: ./books-api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  client:
+    build:
+      context: ./books-client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
