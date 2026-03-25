@@ -1,6 +1,6 @@
-# Books 
+# PageTurner
 
-Books is a tool to track what you're reading.
+PageTurner is a tool to track what you're reading.
 
 ## Features:
 * import a book from a goodreads link
