@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import { useAuth } from '@/context/AuthContext'
+import { AuthorsList } from '@/components/AuthorsList'
 import type { UpdateBookRequest, ReadingStatus } from '@/types'
 
 const statusOptions: ReadingStatus[] = ['reading', 'paused', 'finished']
@@ -182,9 +183,7 @@ export function BookDetailPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h1 className="text-2xl font-bold text-fg-main">{book.title}</h1>
-                    <p className="text-fg-dim mt-1">
-                      {book.authors?.map(a => a.name).join(', ') || 'Unknown author'}
-                    </p>
+                    <AuthorsList authors={book.authors || []} className="text-fg-dim mt-1" />
                   </div>
                   <button
                     onClick={() => setIsEditing(true)}

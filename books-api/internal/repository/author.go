@@ -33,13 +33,11 @@ func (r *AuthorRepository) GetByID(ctx context.Context, id string) (*models.Auth
 
 func (r *AuthorRepository) GetOrCreate(ctx context.Context, name string) (*models.Author, error) {
 	author := &models.Author{}
-	err := r.pool.QueryRow(ctx, `SELECT id, name FROM authors WHERE name = $1`, name).Scan(&author.ID, &author.Name)
-	if err == nil {
-		return author, nil
-	}
-
-	query := `INSERT INTO authors (name) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id, name`
-	err = r.pool.QueryRow(ctx, query, name).Scan(&author.ID, &author.Name)
+	err := r.pool.QueryRow(ctx, `
+		INSERT INTO authors (name) VALUES ($1)
+		ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+		RETURNING id, name
+	`, name).Scan(&author.ID, &author.Name)
 	if err != nil {
 		return nil, err
 	}

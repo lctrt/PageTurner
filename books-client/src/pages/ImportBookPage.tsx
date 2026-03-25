@@ -56,7 +56,7 @@ export function ImportBookPage() {
               className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue bg-bg-inactive text-fg-main"
             />
             <p className="mt-2 text-sm text-fg-dim">
-              Paste a link to a book page on Goodreads. We'll extract the title, author, cover image, and description.
+              Paste a link to a book page on Goodreads. We'll extract the title, author and cover image.
             </p>
           </div>
           
@@ -84,15 +84,6 @@ export function ImportBookPage() {
             )}
           </button>
         </form>
-      </div>
-      
-      <div className="mt-6 p-4 bg-bg-dim rounded-lg">
-        <h3 className="font-medium text-fg-main mb-2">Example URLs:</h3>
-        <ul className="text-sm text-fg-dim space-y-1">
-          <li>• https://www.goodreads.com/book/show/3.Harry_Potter_and_the_Sorcerer_s_Stone</li>
-          <li>• https://www.goodreads.com/book/show/4099.The_Pragmatic_Programmer</li>
-          <li>• https://www.goodreads.com/book/show/1.The_Hobbit</li>
-        </ul>
       </div>
     </div>
   )

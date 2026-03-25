@@ -147,3 +147,84 @@ func TestGoodreadsService_ParseGoodreadsPage_HTTPError(t *testing.T) {
 		t.Error("expected error, got nil")
 	}
 }
+
+func TestGoodreadsService_ImportFromGoodreads_NestedAuthors(t *testing.T) {
+	htmlBody := `<!DOCTYPE html>
+<html>
+<head>
+<script type="application/ld+json">
+{
+  "@type": "Book",
+  "name": "Test Book",
+  "author": {"@type": "Person", "name": "Author One"},
+  "description": "A test description"
+}
+</script>
+</head>
+<body></body>
+</html>`
+
+	mockCreator := &mockBookCreator{}
+	mockHTTP := &mockHTTPClient{
+		response: &http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(strings.NewReader(htmlBody)),
+		},
+	}
+
+	svc := service.NewGoodreadsServiceWithDeps(mockCreator, mockHTTP)
+
+	data, err := svc.ParseGoodreadsPage(context.Background(), "https://goodreads.com/book/123")
+
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	if len(data.Authors) != 1 {
+		t.Errorf("expected 1 author, got %d", len(data.Authors))
+	}
+
+	if len(data.Authors) > 0 && data.Authors[0] != "Author One" {
+		t.Errorf("expected author 'Author One', got '%s'", data.Authors[0])
+	}
+}
+
+func TestGoodreadsService_ImportFromGoodreads_MultipleAuthors(t *testing.T) {
+	htmlBody := `<!DOCTYPE html>
+<html>
+<head>
+<script type="application/ld+json">
+{
+  "@type": "Book",
+  "name": "Test Book",
+  "author": [
+    {"@type": "Person", "name": "Author One"},
+    {"@type": "Person", "name": "Author Two"}
+  ],
+  "description": "A test description"
+}
+</script>
+</head>
+<body></body>
+</html>`
+
+	mockCreator := &mockBookCreator{}
+	mockHTTP := &mockHTTPClient{
+		response: &http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(strings.NewReader(htmlBody)),
+		},
+	}
+
+	svc := service.NewGoodreadsServiceWithDeps(mockCreator, mockHTTP)
+
+	data, err := svc.ParseGoodreadsPage(context.Background(), "https://goodreads.com/book/123")
+
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	if len(data.Authors) != 2 {
+		t.Errorf("expected 2 authors, got %d", len(data.Authors))
+	}
+}

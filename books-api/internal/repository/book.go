@@ -91,6 +91,11 @@ func (r *BookRepository) List(ctx context.Context, limit, offset int) ([]models.
 		if err != nil {
 			return nil, err
 		}
+		authors, err := r.authorRepo.GetByBookID(ctx, book.ID)
+		if err != nil {
+			return nil, err
+		}
+		book.Authors = authors
 		books = append(books, book)
 	}
 	return books, rows.Err()

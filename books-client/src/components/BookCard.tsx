@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Book } from '@/types'
+import { AuthorsList } from './AuthorsList'
 
 interface BookCardProps {
   book: Book
@@ -28,9 +29,7 @@ export function BookCard({ book }: BookCardProps) {
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-fg-main truncate">{book.title}</h3>
-        <p className="text-sm text-fg-dim truncate mt-1">
-          {book.authors?.map(a => a.name).join(', ') || 'Unknown author'}
-        </p>
+        <AuthorsList authors={book.authors || []} className="text-sm text-fg-dim truncate block mt-1" />
       </div>
     </Link>
   )

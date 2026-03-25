@@ -161,5 +161,6 @@ func (s *BookService) invalidateCache(ctx context.Context) {
 	if s.cache == nil {
 		return
 	}
+	_ = s.cache.DeletePattern(ctx, "book:*")
 	_ = s.cache.DeletePattern(ctx, "books:*")
 }
