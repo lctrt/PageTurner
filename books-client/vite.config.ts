@@ -10,6 +10,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
+    allowedHosts: process.env.ALLOWED_HOSTS.split(','),
     port: 5173,
     proxy: {
       '/api': {
