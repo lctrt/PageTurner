@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"books/internal/config"
 
@@ -20,14 +21,27 @@ func Connect(cfg config.DatabaseConfig) (*pgxpool.Pool, error) {
 		cfg.SSLMode,
 	)
 
-	pool, err := pgxpool.New(context.Background(), dsn)
-	if err != nil {
-		return nil, fmt.Errorf("unable to create connection pool: %w", err)
+	const maxRetries = 5
+	const initialBackoff = 500 * time.Millisecond
+
+	var pool *pgxpool.Pool
+	var err error
+
+	for i := 0; i < maxRetries; i++ {
+		pool, err = pgxpool.New(context.Background(), dsn)
+		if err == nil {
+			if pingErr := pool.Ping(context.Background()); pingErr == nil {
+				return pool, nil
+			}
+			pool.Close()
+		}
+
+		if i < maxRetries-1 {
+			backoff := initialBackoff * time.Duration(1<<i)
+			fmt.Printf("Database connection attempt %d/%d failed: %v. Retrying in %v...\n", i+1, maxRetries, err, backoff)
+			time.Sleep(backoff)
+		}
 	}
 
-	if err := pool.Ping(context.Background()); err != nil {
-		return nil, fmt.Errorf("unable to ping database: %w", err)
-	}
-
-	return pool, nil
+	return nil, fmt.Errorf("failed to connect to database after %d attempts: %w", maxRetries, err)
 }
