@@ -13,9 +13,7 @@ services:
     image: redis:8.6.2-alpine3.23
 
   api:
-    build:
-      context: ./books-api
-      dockerfile: Dockerfile
+    image: docker-vm-1:5000/books-api
     ports:
       - "8080:8080"
     depends_on:
@@ -23,9 +21,7 @@ services:
       - redis
 
   client:
-    build:
-      context: ./books-client
-      dockerfile: Dockerfile
+    image: docker-vm-1:5000/books-client
     ports:
       - "5173:5173"
     environment:
