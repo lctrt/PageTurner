@@ -12,7 +12,6 @@ metadata:
   name: postgres-pvc
   namespace: pageturner
 spec:
-  storageClassName: "default"
   accessModes:
     - ReadWriteOnce
   resources:
