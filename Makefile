@@ -24,9 +24,7 @@ help:
 
 secrets:
 	kubectl apply -f k3s/namespace.yaml
-	kubectl create secret generic pageturner-secrets \
-	--namespace pageturner \
-  --from-literal=POSTGRES_PASSWORD=${POSTGRES_PASSWORD} 
+	kubectl apply -f k3s/secrets.yaml
 
 apply-postgres:
 	kubectl apply -f k3s/postgres.yaml

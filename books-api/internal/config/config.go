@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"strings"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	Database DatabaseConfig
@@ -10,12 +14,12 @@ type Config struct {
 }
 
 type DatabaseConfig struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	Database string
-	SSLMode  string
+	Host     string `mapstructure:"POSTGRES_HOST"`
+	Port     int    `mapstructure:"POSTGRES_PORT"`
+	User     string `mapstructure:"POSTGRES_USER"`
+	Password string `mapstructure:"POSTGRES_PASSWORD"`
+	Database string `mapstructure:"POSTGRES_DB"`
+	SSLMode  string `mapstructure:"POSTGRES_SSLMODE"`
 }
 
 type AppConfig struct {
@@ -29,16 +33,19 @@ type JWTConfig struct {
 }
 
 type CacheConfig struct {
-	Host     string
-	Port     int
-	Password string
-	DB       int
-	Enabled  bool
+	Host     string `mapstructure:"REDIS_HOST"`
+	Port     int    `mapstructure:"REDIS_PORT"`
+	Password string `mapstructure:"REDIS_PASSWORD"`
+	DB       int    `mapstructure:"REDIS_DB"`
+	Enabled  bool   `mapstructure:"REDIS_ENABLED"`
 }
 
 func Load(path string) (*Config, error) {
 	viper.SetConfigFile(path)
 	viper.SetConfigType("yaml")
+
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
