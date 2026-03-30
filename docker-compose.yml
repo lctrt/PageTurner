@@ -26,6 +26,7 @@ services:
       - "5173:5173"
     environment:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - API_URL=${API_URL}
     depends_on:
       - api
 volumes:
