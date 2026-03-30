@@ -7,6 +7,19 @@ data:
   POSTGRES_DB: books
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: pageturner
+spec:
+  storageClassName: "default"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: postgres
@@ -43,4 +56,12 @@ spec:
                 name: pageturner-secrets
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+              subPath: pgdata
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 
