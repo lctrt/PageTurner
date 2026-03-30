@@ -5,11 +5,11 @@ metadata:
   namespace: pageturner
 data:
   POSTGRES_HOST: postgres
-  POSTGRES_PORT: 5432
+  POSTGRES_PORT: "5432"
   REDIS_HOST: redis
-  REDIS_PORT: 6379
-  REDIS_DB: 0
-  REDIS_ENABLED: true
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  REDIS_ENABLED: "true"
 ---
 apiVersion: v1
 kind: Service
