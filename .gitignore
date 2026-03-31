@@ -1,3 +1,4 @@
 .env
 pg-data
 secrets.yaml
+.DS_Store

@@ -1,8 +1,6 @@
 package config
 
 import (
-	"strings"
-
 	"github.com/spf13/viper"
 )
 
@@ -14,12 +12,12 @@ type Config struct {
 }
 
 type DatabaseConfig struct {
-	Host     string `mapstructure:"POSTGRES_HOST"`
-	Port     int    `mapstructure:"POSTGRES_PORT"`
-	User     string `mapstructure:"POSTGRES_USER"`
-	Password string `mapstructure:"POSTGRES_PASSWORD"`
-	Database string `mapstructure:"POSTGRES_DB"`
-	SSLMode  string `mapstructure:"POSTGRES_SSLMODE"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Database string `mapstructure:"database"`
+	SSLMode  string `mapstructure:"sslmode"`
 }
 
 type AppConfig struct {
@@ -33,19 +31,28 @@ type JWTConfig struct {
 }
 
 type CacheConfig struct {
-	Host     string `mapstructure:"REDIS_HOST"`
-	Port     int    `mapstructure:"REDIS_PORT"`
-	Password string `mapstructure:"REDIS_PASSWORD"`
-	DB       int    `mapstructure:"REDIS_DB"`
-	Enabled  bool   `mapstructure:"REDIS_ENABLED"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
+	Enabled  bool   `mapstructure:"enabled"`
 }
 
 func Load(path string) (*Config, error) {
 	viper.SetConfigFile(path)
 	viper.SetConfigType("yaml")
 
-	viper.AutomaticEnv()
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.BindEnv("database.host", "POSTGRES_HOST")
+	viper.BindEnv("database.port", "POSTGRES_PORT")
+	viper.BindEnv("database.user", "POSTGRES_USER")
+	viper.BindEnv("database.password", "POSTGRES_PASSWORD")
+	viper.BindEnv("database.database", "POSTGRES_DB")
+	viper.BindEnv("database.sslmode", "POSTGRES_SSLMODE")
+	viper.BindEnv("cache.host", "REDIS_HOST")
+	viper.BindEnv("cache.port", "REDIS_PORT")
+	viper.BindEnv("cache.password", "REDIS_PASSWORD")
+	viper.BindEnv("cache.db", "REDIS_DB")
+	viper.BindEnv("cache.enabled", "REDIS_ENABLED")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err

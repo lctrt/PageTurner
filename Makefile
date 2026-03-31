@@ -63,12 +63,15 @@ delete:
 	kubectl delete -f k3s/client.yaml
 
 build:
-	docker build -t docker-vm-1:5000/books-api:latest ./books-api
-	docker build -t docker-vm-1:5000/books-client:latest ./books-client
+	docker build -t docker-vm-1:5000/books-api:3 ./books-api
+	docker build -t docker-vm-1:5000/books-client:3 ./books-client
+
+build-api:
+	docker build -t docker-vm-1:5000/books-api:5 ./books-api
 
 push:
-	docker push docker-vm-1:5000/books-api:latest
-	docker push docker-vm-1:5000/books-client:latest
+	docker push docker-vm-1:5000/books-api:5
+	docker push docker-vm-1:5000/books-client:3
 
 deploy:
 	docker context use docker-vm-1

@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: docker-vm-1:5000/books-client
+          image: docker-vm-1:5000/books-client:3
           envFrom:
             - configMapRef:
                 name: client-config

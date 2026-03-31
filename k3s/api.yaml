@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: docker-vm-1:5000/books-api 
+          image: docker-vm-1:5000/books-api:5
           envFrom:
             - configMapRef:
                 name: api-config
