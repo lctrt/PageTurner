@@ -65,3 +65,7 @@ func (c *Cache) DeletePattern(ctx context.Context, pattern string) error {
 func (c *Cache) Close() error {
 	return c.client.Close()
 }
+
+func (c *Cache) Ping() bool {
+	return c.client.Ping(context.Background()).Err() == nil
+}

@@ -65,7 +65,20 @@ func main() {
 	r.Use(chiMiddleware.Logger)
 	r.Use(chiMiddleware.Recoverer)
 
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/health/live", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("OK"))
+	})
+
+	r.Get("/health/ready", func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		if err := pool.Ping(ctx); err != nil {
+			http.Error(w, "postgres: "+err.Error(), http.StatusServiceUnavailable)
+			return
+		}
+		if redisCache != nil && !redisCache.Ping() {
+			http.Error(w, "redis: connection failed", http.StatusServiceUnavailable)
+			return
+		}
 		w.Write([]byte("OK"))
 	})
 
