@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: docker-vm-1:5000/books-api:5
+          image: docker-vm-1:5000/books-api:6
           envFrom:
             - configMapRef:
                 name: api-config
@@ -50,6 +50,21 @@ spec:
                 name: pageturner-secrets
           ports:
             - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+
 
 
 

@@ -30,4 +30,14 @@ spec:
           image: redis:8.6.2-alpine3.23
           ports:
             - containerPort: 6379
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
