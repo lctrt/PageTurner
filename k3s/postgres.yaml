@@ -5,6 +5,7 @@ metadata:
   namespace: pageturner
 data:
   POSTGRES_DB: books
+  PGDATA: /var/lib/postgresql/data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
