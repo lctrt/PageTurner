@@ -19,16 +19,14 @@ metadata:
 spec:
   selector:
     app: api
-  type: NodePort
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 31002
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: api
   namespace: pageturner
 spec:
   replicas: 1

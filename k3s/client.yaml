@@ -4,8 +4,7 @@ metadata:
   name: client-config
   namespace: pageturner
 data:
-  ALLOWED_HOSTS: k3s-1
-  API_URL: http://k3s-1:31002
+  ALLOWED_HOSTS: k3s-1,pageturner.local
 ---
 apiVersion: v1
 kind: Service
@@ -15,11 +14,9 @@ metadata:
 spec:
   selector:
     app: client 
-  type: NodePort
   ports:
     - port: 5173
       targetPort: 5173
-      nodePort: 31001
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,7 +35,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: docker-vm-1:5000/books-client:3
+          image: docker-vm-1:5000/books-client:4
           envFrom:
             - configMapRef:
                 name: client-config

@@ -50,28 +50,44 @@ apply-client:
 delete-client:
 	kubectl delete -f k3s/client.yaml
 
+apply-ingress:
+	kubectl apply -f k3s/https.yaml
+	kubectl apply -f k3s/ingress.yaml
+
+delete-ingress:
+	kubectl delete -f k3s/https.yaml
+	kubectl delete -f k3s/ingress.yaml
+
 apply:
 	kubectl apply -f k3s/postgres.yaml
 	kubectl apply -f k3s/redis.yaml
 	kubectl apply -f k3s/client.yaml
 	kubectl apply -f k3s/api.yaml
+	kubectl apply -f k3s/ingress.yaml
 
 delete:
 	kubectl delete -f k3s/postgres.yaml
 	kubectl delete -f k3s/redis.yaml
 	kubectl delete -f k3s/api.yaml
 	kubectl delete -f k3s/client.yaml
+	kubectl delete -f k3s/ingress.yaml
 
 build:
 	docker build -t docker-vm-1:5000/books-api:6 ./books-api
-	docker build -t docker-vm-1:5000/books-client:3 ./books-client
+	docker build -t docker-vm-1:5000/books-client:4 ./books-client
 
 build-api:
 	docker build -t docker-vm-1:5000/books-api:6 ./books-api
 
+build-client:
+	docker build -t docker-vm-1:5000/books-client:4 ./books-client
+
+push-client:
+	docker push docker-vm-1:5000/books-client:4
+
 push:
 	docker push docker-vm-1:5000/books-api:6
-	docker push docker-vm-1:5000/books-client:3
+	docker push docker-vm-1:5000/books-client:4
 
 deploy:
 	docker context use docker-vm-1
