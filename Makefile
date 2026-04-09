@@ -80,10 +80,10 @@ build-api:
 	docker build -t docker-vm-1:5000/books-api:6 ./books-api
 
 build-client:
-	docker build -t docker-vm-1:5000/books-client:4 ./books-client
+	docker build -t docker-vm-1:5000/books-client:5 ./books-client
 
 push-client:
-	docker push docker-vm-1:5000/books-client:4
+	docker push docker-vm-1:5000/books-client:5
 
 push:
 	docker push docker-vm-1:5000/books-api:6
