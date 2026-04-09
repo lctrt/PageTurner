@@ -9,7 +9,22 @@ clone:
       skip_verify: true
 
 steps:
-  - name: build-and-push
+  - name: build-and-push-server
+    image: plugins/docker
+    settings:
+      repo: forgejo.local/lctrt/pageturner
+      tags: latest,${CI_COMMIT_SHA}
+      registry: forgejo.local
+      context: ./books-server
+      dockerfile: ./books-server/Dockerfile
+      insecure: true
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      branch: main
+  - name: build-and-push-client
     image: plugins/docker
     settings:
       repo: forgejo.local/lctrt/pageturner
