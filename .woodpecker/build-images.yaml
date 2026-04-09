@@ -15,7 +15,7 @@ steps:
       # repo: forgejo.local/lctrt/pageturner
       repo: docker-vm-1:5000/books-api
       tags: latest,${CI_COMMIT_SHA}
-      registry: forgejo.local
+      # registry: forgejo.local
       context: ./books-api
       dockerfile: ./books-api/Dockerfile
       insecure: true
@@ -34,7 +34,7 @@ steps:
       # repo: forgejo.local/lctrt/pageturner
       repo: docker-vm-1:5000/books-client
       tags: latest,${CI_COMMIT_SHA}
-      registry: forgejo.local
+      # registry: forgejo.local
       context: ./books-client
       dockerfile: ./books-client/Dockerfile
       insecure: true
