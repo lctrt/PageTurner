@@ -12,7 +12,8 @@ steps:
   - name: build-and-push-server
     image: plugins/docker
     settings:
-      repo: forgejo.local/lctrt/pageturner
+      # repo: forgejo.local/lctrt/pageturner
+      repo: docker-vm-1:5000/books-api
       tags: latest,${CI_COMMIT_SHA}
       registry: forgejo.local
       context: ./books-api
@@ -27,7 +28,8 @@ steps:
   - name: build-and-push-client
     image: plugins/docker
     settings:
-      repo: forgejo.local/lctrt/pageturner
+      # repo: forgejo.local/lctrt/pageturner
+      repo: docker-vm-1:5000/books-client
       tags: latest,${CI_COMMIT_SHA}
       registry: forgejo.local
       context: ./books-client
