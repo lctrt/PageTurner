@@ -23,6 +23,9 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      custom_args:
+        - --insecure
+        - --skip-tls-verify
     when:
       branch: main
   - name: build-and-push-client
@@ -39,5 +42,8 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      custom_args:
+        - --insecure
+        - --skip-tls-verify
     when:
       branch: main
