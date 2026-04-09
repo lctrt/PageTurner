@@ -19,10 +19,10 @@ steps:
       context: ./books-api
       dockerfile: ./books-api/Dockerfile
       insecure: true
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
+      # username:
+      #   from_secret: docker_username
+      # password:
+      #   from_secret: docker_password
       custom_args:
         - --insecure
         - --skip-tls-verify
@@ -38,10 +38,10 @@ steps:
       context: ./books-client
       dockerfile: ./books-client/Dockerfile
       insecure: true
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
+      # username:
+      #   from_secret: docker_username
+      # password:
+      #   from_secret: docker_password
       custom_args:
         - --insecure
         - --skip-tls-verify
