@@ -10,12 +10,16 @@ import (
 	"books/internal/config"
 	"books/internal/database"
 	"books/internal/handlers"
+	"books/internal/metrics"
 	authMw "books/internal/middleware"
+	middleware "books/internal/middleware"
 	"books/internal/repository"
 	svc "books/internal/services"
 
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -61,9 +65,15 @@ func main() {
 	goodreadsHandler := handlers.NewGoodreadsHandler(goodreadsService)
 	authHandler := handlers.NewAuthHandler(authService)
 
+	metrics.Register(prometheus.DefaultRegisterer)
+	prometheus.DefaultRegisterer.MustRegister(
+		metrics.NewStatsCollector(bookRepo, userRepo, progressRepo),
+	)
+
 	r := chi.NewRouter()
 	r.Use(chiMiddleware.Logger)
 	r.Use(chiMiddleware.Recoverer)
+	r.Use(middleware.Metrics)
 
 	r.Get("/health/live", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
@@ -81,6 +91,8 @@ func main() {
 		}
 		w.Write([]byte("OK"))
 	})
+
+	r.Handle("/metrics", promhttp.Handler())
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register", authHandler.Register)
