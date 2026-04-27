@@ -24,7 +24,7 @@ steps:
     commands:
       - dockerd --insecure-registry docker-vm-1:5000 &
       - while ! docker version > /dev/null 2>&1; do sleep 1; done
-      - docker build -t docker-vm-1:5000/books-api:latest -t docker-vm-1:5000/books-client:${CI_COMMIT_SHA} .
+      - docker build -t docker-vm-1:5000/books-api:latest -t docker-vm-1:5000/books-client:${CI_COMMIT_SHA} ./books-api
       - docker push docker-vm-1:5000/books-api:latest
       - docker push docker-vm-1:5000/books-api:${CI_COMMIT_SHA}
     when:
@@ -45,7 +45,7 @@ steps:
     commands:
       - dockerd --insecure-registry docker-vm-1:5000 &
       - while ! docker version > /dev/null 2>&1; do sleep 1; done
-      - docker build -t docker-vm-1:5000/books-client:latest -t docker-vm-1:5000/books-client:${CI_COMMIT_SHA} .
+      - docker build -t docker-vm-1:5000/books-client:latest -t docker-vm-1:5000/books-client:${CI_COMMIT_SHA} ./books-client
       - docker push docker-vm-1:5000/books-client:latest
       - docker push docker-vm-1:5000/books-client:${CI_COMMIT_SHA}
     when:
