@@ -9,7 +9,7 @@ clone:
       skip_verify: true
 
 steps:
-  - name: build-and-push-api
+  - name: build-and-push
     image: woodpeckerci/plugin-docker-buildx:5.2.0
     privileged: true
 
@@ -24,29 +24,13 @@ steps:
     commands:
       - dockerd --insecure-registry docker-vm-1:5000 &
       - while ! docker version > /dev/null 2>&1; do sleep 1; done
-      - docker build -t docker-vm-1:5000/books-api:latest -t docker-vm-1:5000/books-client:${CI_COMMIT_SHA} ./books-api
+      - docker build -t docker-vm-1:5000/books-api:latest -t docker-vm-1:5000/books-api:${CI_COMMIT_SHA} ./books-api
       - docker push docker-vm-1:5000/books-api:latest
       - docker push docker-vm-1:5000/books-api:${CI_COMMIT_SHA}
-    when:
-      branch: main
 
-  - name: build-and-push-client
-    image: woodpeckerci/plugin-docker-buildx:5.2.0
-    privileged: true
-
-    backend_options:
-      kubernetes:
-        securityContext:
-          privileged: true
-        hostAliases:
-          - ip: 192.168.0.152
-            hostnames:
-              - docker-vm-1
-    commands:
-      - dockerd --insecure-registry docker-vm-1:5000 &
-      - while ! docker version > /dev/null 2>&1; do sleep 1; done
       - docker build -t docker-vm-1:5000/books-client:latest -t docker-vm-1:5000/books-client:${CI_COMMIT_SHA} ./books-client
       - docker push docker-vm-1:5000/books-client:latest
       - docker push docker-vm-1:5000/books-client:${CI_COMMIT_SHA}
     when:
       branch: main
+
