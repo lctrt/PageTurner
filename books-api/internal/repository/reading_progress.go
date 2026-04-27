@@ -77,3 +77,27 @@ func (r *ReadingProgressRepository) GetByUserID(ctx context.Context, userID stri
 	}
 	return progress, rows.Err()
 }
+
+func (r *ReadingProgressRepository) CountByStatus(ctx context.Context) (map[string]int64, error) {
+	rows, err := r.pool.Query(ctx,
+		`SELECT status, COUNT(*) FROM reading_progress GROUP BY status`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	out := map[string]int64{
+		"reading":  0,
+		"finished": 0,
+		"paused":   0,
+	}
+	for rows.Next() {
+		var status string
+		var n int64
+		if err := rows.Scan(&status, &n); err != nil {
+			return nil, err
+		}
+		out[status] = n
+	}
+	return out, rows.Err()
+}

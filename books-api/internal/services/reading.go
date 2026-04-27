@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"books/internal/metrics"
 	"books/internal/models"
 	"books/internal/repository"
 
@@ -112,6 +113,8 @@ func (s *ReadingService) UpdateStatus(ctx context.Context, userID, bookID string
 		return nil, err
 	}
 
+	previousPagesRead := progress.PagesRead
+
 	if req.Pages != nil {
 		progress.Pages = *req.Pages
 	}
@@ -124,6 +127,11 @@ func (s *ReadingService) UpdateStatus(ctx context.Context, userID, bookID string
 
 	if err := s.progressRepo.Update(ctx, progress); err != nil {
 		return nil, err
+	}
+
+	delta := progress.PagesRead - previousPagesRead
+	if delta > 0 {
+		metrics.PagesReadTotal.Add(float64(delta))
 	}
 
 	return progress, nil

@@ -110,3 +110,9 @@ func (r *BookRepository) Update(ctx context.Context, book *models.Book) error {
 	return r.pool.QueryRow(ctx, query, book.ID, book.Title, book.Blurb, book.Image, book.GoodreadsLink, book.CustomLink).
 		Scan(&book.UpdateAt)
 }
+
+func (r *BookRepository) Count(ctx context.Context) (int64, error) {
+	var n int64
+	err := r.pool.QueryRow(ctx, `SELECT COUNT(*) FROM books`).Scan(&n)
+	return n, err
+}

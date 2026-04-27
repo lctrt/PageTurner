@@ -70,3 +70,9 @@ func (r *UserRepository) Update(ctx context.Context, user *models.User) error {
 	`
 	return r.pool.QueryRow(ctx, query, user.ID, user.Username, user.Email).Scan(&user.UpdateAt)
 }
+
+func (r *UserRepository) Count(ctx context.Context) (int64, error) {
+	var n int64
+	err := r.pool.QueryRow(ctx, `SELECT COUNT(*) FROM users`).Scan(&n)
+	return n, err
+}

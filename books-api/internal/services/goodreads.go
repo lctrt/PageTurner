@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"books/internal/metrics"
 	"books/internal/models"
 
 	"github.com/astappiev/microdata"
@@ -174,10 +175,12 @@ func (s *GoodreadsService) ParseGoodreadsPage(ctx context.Context, url string) (
 func (s *GoodreadsService) ImportFromGoodreads(ctx context.Context, req GoodreadsImportRequest) (*models.Book, error) {
 	data, err := s.ParseGoodreadsPage(ctx, req.URL)
 	if err != nil {
+		metrics.GoodreadsImports.WithLabelValues("failure").Inc()
 		return nil, err
 	}
 
 	if data.Title == "" {
+		metrics.GoodreadsImports.WithLabelValues("failure").Inc()
 		return nil, ErrFailedToParseGoodreads
 	}
 
@@ -189,9 +192,11 @@ func (s *GoodreadsService) ImportFromGoodreads(ctx context.Context, req Goodread
 		GoodreadsLink: data.GoodreadsLink,
 	})
 	if err != nil {
+		metrics.GoodreadsImports.WithLabelValues("failure").Inc()
 		return nil, err
 	}
 
+	metrics.GoodreadsImports.WithLabelValues("success").Inc()
 	return book, nil
 }
 
