@@ -1,0 +1,27 @@
+when:
+  - event: [push, manual]
+    branch: main
+
+clone:
+  git:
+    image: alpine/git
+    environment:
+      GIT_SSL_NO_VERIFY: "true"
+    commands:
+      - git clone --mirror https://forgejo.local/lctrt/pageturner.git .git
+      - git config --unset-all remote.origin.fetch
+      - git config --bool core.bare false
+
+steps:
+  - name: mirror
+    image: alpine/git
+    environment:
+      GITHUB_MIRROR_TOKEN:
+        from_secret: github_mirror_token
+      CODEBERG_MIRROR_TOKEN:
+        from_secret: codeberg_mirror_token
+    commands:
+      - git remote add github https://x-token-auth:$GITHUB_MIRROR_TOKEN@github.com/lctrt/pageturner.git
+      - git remote add codeberg https://x-token-auth:$CODEBERG_MIRROR_TOKEN@codeberg.org/lctrt/pageturner.git
+      - git push --mirror github
+      - git push --mirror codeberg
